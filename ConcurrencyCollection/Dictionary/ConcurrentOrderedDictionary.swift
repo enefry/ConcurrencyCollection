@@ -19,12 +19,12 @@ public final class ConcurrentOrderedDictionary<KEY: Hashable, VALUE> {
 extension ConcurrentOrderedDictionary: SafeOperation {
     public typealias RawCollectionType = OrderedDictionary<KEY, VALUE>
 
-    public func safeWrite<T>(_ op: (inout OrderedCollections.OrderedDictionary<KEY, VALUE>) -> T) -> T {
-        data.safeWrite(op)
+    public func safeWrite<T>(_ op: (inout OrderedCollections.OrderedDictionary<KEY, VALUE>) throws -> T) rethrows -> T {
+        try data.safeWrite(op)
     }
 
-    public func safeGet<T>(_ op: (inout OrderedCollections.OrderedDictionary<KEY, VALUE>) -> T) -> T {
-        data.safeGet(op)
+    public func safeGet<T>(_ op: (inout OrderedCollections.OrderedDictionary<KEY, VALUE>) throws -> T) rethrows -> T {
+        try data.safeGet(op)
     }
 }
 

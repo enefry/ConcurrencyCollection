@@ -15,12 +15,12 @@ public final class ConcurrentDictionary<KEY: Hashable, VALUE>: SafeOperation, Ma
     public typealias KEYType = KEY
     public typealias VALUEType = VALUE
 
-    public func safeWrite<T>(_ op: (inout Dictionary<KEY, VALUE>) -> T) -> T {
-        data.safeWrite(op)
+    public func safeWrite<T>(_ op: (inout Dictionary<KEY, VALUE>) throws -> T) rethrows -> T {
+        try data.safeWrite(op)
     }
 
-    public func safeGet<T>(_ op: (inout Dictionary<KEY, VALUE>) -> T) -> T {
-        data.safeGet(op)
+    public func safeGet<T>(_ op: (inout Dictionary<KEY, VALUE>) throws -> T) rethrows -> T {
+        try data.safeGet(op)
     }
 
     // MARK: - lifecycle
@@ -83,6 +83,20 @@ public final class ConcurrentDictionary<KEY: Hashable, VALUE>: SafeOperation, Ma
             result = datas.removeValue(forKey: key)
         }
         return result
+    }
+
+    public func remove(whereAll: (_ key: KEY, _ value: VALUE) -> Bool) {
+        data.safeWrite { datas in
+            var removeKeys: [KEY] = []
+            datas.forEach { (key: KEY, value: VALUE) in
+                if whereAll(key, value) {
+                    removeKeys.append(key)
+                }
+            }
+            removeKeys.forEach {
+                datas.removeValue(forKey: $0)
+            }
+        }
     }
 
     /// check value is exists

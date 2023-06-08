@@ -48,8 +48,8 @@ public class PThreadRWLock: RWLock {
 
 public protocol SafeOperation {
     associatedtype RawCollectionType
-    mutating func safeWrite<T>(_ op: (inout RawCollectionType) -> T) -> T
-    mutating func safeGet<T>(_ op: (inout RawCollectionType) -> T) -> T
+    mutating func safeWrite<T>(_ op: (inout RawCollectionType) throws -> T) rethrows -> T
+    mutating func safeGet<T>(_ op: (inout RawCollectionType) throws -> T) rethrows -> T
 }
 
 public struct SafeContainer<RawCollectionType>: SafeOperation {
@@ -60,19 +60,19 @@ public struct SafeContainer<RawCollectionType>: SafeOperation {
         self.container = container
     }
 
-    public mutating func safeWrite<T>(_ op: (inout RawCollectionType) -> T) -> T {
+    public mutating func safeWrite<T>(_ op: (inout RawCollectionType) throws -> T) rethrows -> T {
         lock.writeLock()
         defer {
             lock.unlock()
         }
-        return op(&container)
+        return try op(&container)
     }
 
-    public mutating func safeGet<T>(_ op: (inout RawCollectionType) -> T) -> T {
+    public mutating func safeGet<T>(_ op: (inout RawCollectionType) throws -> T) rethrows -> T {
         lock.readLock()
         defer {
             lock.unlock()
         }
-        return op(&container)
+        return try op(&container)
     }
 }

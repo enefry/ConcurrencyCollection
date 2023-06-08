@@ -23,12 +23,12 @@ public final class ConcurrentDeque<Element> {
 extension ConcurrentDeque: SafeOperation {
     // MARK: - SafeOperation
 
-    public func safeWrite<T>(_ op: (inout DequeModule.Deque<Element>) -> T) -> T {
-        data.safeWrite(op)
+    public func safeWrite<T>(_ op: (inout DequeModule.Deque<Element>) throws -> T) rethrows -> T {
+        try data.safeWrite(op)
     }
 
-    public func safeGet<T>(_ op: (inout DequeModule.Deque<Element>) -> T) -> T {
-        data.safeGet(op)
+    public func safeGet<T>(_ op: (inout DequeModule.Deque<Element>) throws -> T) rethrows -> T {
+        try data.safeGet(op)
     }
 
     public typealias RawCollectionType = DequeModule.Deque<Element>
