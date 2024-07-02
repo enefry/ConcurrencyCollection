@@ -5,8 +5,10 @@ import PackageDescription
 let package = Package(
   name: "ConcurrencyCollection",
   platforms: [
-    .iOS(.v14),
-    .macCatalyst(.v15)
+    .iOS(.v13),
+    .macOS(.v11),
+    .tvOS(.v13),
+    .watchOS(.v7),
   ],
   products: [
     .library(name: "ConcurrencyCollection", targets: ["ConcurrencyCollection"]),
