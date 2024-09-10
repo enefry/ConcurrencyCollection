@@ -8,7 +8,7 @@
 import Foundation
 import OrderedCollections
 
-public final class ConcurrentOrderedDictionary<KEY: Hashable, VALUE> {
+public final class ConcurrentOrderedDictionary<KEY: Hashable, VALUE>: @unchecked Sendable {
     public init(_ dictionary: OrderedDictionary<KEY, VALUE> = OrderedDictionary()) {
         data = SafeContainer(dictionary)
     }
@@ -90,8 +90,9 @@ extension ConcurrentOrderedDictionary: MapProtocol {
     public func moveBy(from: Int, to: Int) -> Bool {
         if from != to {
             return safeWrite { datas in
-                if 0 <= from, from < datas.count,
-                   0 <= to, to < datas.count {
+                if from >= 0, from < datas.count,
+                   to >= 0, to < datas.count
+                {
                     let key = datas.keys[from]
                     let value = datas.values[from]
                     datas.remove(at: from)
@@ -109,7 +110,8 @@ extension ConcurrentOrderedDictionary: MapProtocol {
     public func moveBy(fromKey: KEY, to: Int) -> Bool {
         safeWrite { datas in
             if let value = datas[fromKey],
-               0 <= to, to < datas.count {
+               to >= 0, to < datas.count
+            {
                 datas.removeValue(forKey: fromKey)
                 datas.updateValue(value, forKey: fromKey, insertingAt: to)
                 return true

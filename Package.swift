@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.9
 
 import PackageDescription
 
@@ -20,7 +20,7 @@ let package = Package(
     .target(
             name: "ConcurrencyCollection",
             dependencies: [
-                .productItem(name: "Collections",package: "swift-collections"),
+                .product(name: "Collections",package: "swift-collections"),
             ],
             path: "ConcurrencyCollection"
         ),

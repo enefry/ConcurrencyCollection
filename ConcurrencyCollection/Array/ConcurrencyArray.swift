@@ -9,21 +9,21 @@ import Foundation
 
 /// Thread-safe array wrapper
 /// - Important: Note that this is a `class`, i.e. reference (not value) type
-public final class ConcurrentArray<Element>: SafeOperation {
+public final class ConcurrentArray<Element>: SafeOperation, @unchecked Sendable {
     // MARK: - SafeOperation
 
-    public typealias RawCollectionType = Array<Element>
-    public func safeWrite<T>(_ op: (inout Array<Element>) throws -> T) rethrows -> T {
+    public typealias RawCollectionType = [Element]
+    public func safeWrite<T>(_ op: (inout [Element]) throws -> T) rethrows -> T {
         try data.safeWrite(op)
     }
 
-    public func safeGet<T>(_ op: (inout Array<Element>) throws -> T) rethrows -> T {
+    public func safeGet<T>(_ op: (inout [Element]) throws -> T) rethrows -> T {
         try data.safeGet(op)
     }
 
     // MARK: Lifecycle
 
-    public init(_ array: Array<Element> = []) {
+    public init(_ array: [Element] = []) {
         data = SafeContainer(array)
     }
 
@@ -109,7 +109,8 @@ public final class ConcurrentArray<Element>: SafeOperation {
     public func value(at index: Int) -> Element? {
         return data.safeGet {
             if index >= 0,
-               $0.count > index {
+               $0.count > index
+            {
                 return $0[index]
             } else {
                 return nil
@@ -121,7 +122,8 @@ public final class ConcurrentArray<Element>: SafeOperation {
     public func mutateValue(at index: Int, mutation: (Element) -> Element) {
         data.safeWrite { container in
             if index >= 0,
-               container.count > index {
+               container.count > index
+            {
                 let value = container[index]
                 container[index] = mutation(value)
             }
@@ -157,5 +159,5 @@ public final class ConcurrentArray<Element>: SafeOperation {
 
     // MARK: private data
 
-    fileprivate var data: SafeContainer<Array<Element>>
+    fileprivate var data: SafeContainer<[Element]>
 }

@@ -8,24 +8,24 @@
 import Foundation
 
 /// - Important: Note that this is a `class`, i.e. reference (not value) type
-public final class ConcurrentDictionary<KEY: Hashable, VALUE>: SafeOperation, MapProtocol {
+public final class ConcurrentDictionary<KEY: Hashable, VALUE>: SafeOperation, MapProtocol, @unchecked Sendable {
     // MARK: - SafeOperation
 
-    public typealias RawCollectionType = Dictionary<KEY, VALUE>
+    public typealias RawCollectionType = [KEY: VALUE]
     public typealias KEYType = KEY
     public typealias VALUEType = VALUE
 
-    public func safeWrite<T>(_ op: (inout Dictionary<KEY, VALUE>) throws -> T) rethrows -> T {
+    public func safeWrite<T>(_ op: (inout [KEY: VALUE]) throws -> T) rethrows -> T {
         try data.safeWrite(op)
     }
 
-    public func safeGet<T>(_ op: (inout Dictionary<KEY, VALUE>) throws -> T) rethrows -> T {
+    public func safeGet<T>(_ op: (inout [KEY: VALUE]) throws -> T) rethrows -> T {
         try data.safeGet(op)
     }
 
     // MARK: - lifecycle
 
-    public init(_ dict: Dictionary<KEY, VALUE> = [:]) {
+    public init(_ dict: [KEY: VALUE] = [:]) {
         data = SafeContainer(dict)
     }
 
@@ -88,13 +88,13 @@ public final class ConcurrentDictionary<KEY: Hashable, VALUE>: SafeOperation, Ma
     public func remove(whereAll: (_ key: KEY, _ value: VALUE) -> Bool) {
         data.safeWrite { datas in
             var removeKeys: [KEY] = []
-            datas.forEach { (key: KEY, value: VALUE) in
+            for (key, value) in datas {
                 if whereAll(key, value) {
                     removeKeys.append(key)
                 }
             }
-            removeKeys.forEach {
-                datas.removeValue(forKey: $0)
+            for removeKey in removeKeys {
+                datas.removeValue(forKey: removeKey)
             }
         }
     }
@@ -142,5 +142,5 @@ public final class ConcurrentDictionary<KEY: Hashable, VALUE>: SafeOperation, Ma
 
     // MARK: - data
 
-    private var data: SafeContainer<Dictionary<KEY, VALUE>>
+    private var data: SafeContainer<[KEY: VALUE]>
 }

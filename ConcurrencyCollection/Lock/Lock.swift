@@ -24,7 +24,7 @@ public class PThreadRWLock: RWLock {
 
     public init() {
         lock = pthread_rwlock_t()
-        var ret = pthread_rwlock_init(&lock, nil)
+        let ret = pthread_rwlock_init(&lock, nil)
         if EAGAIN == ret || EBUSY == ret {
             pthread_rwlock_init(&lock, nil)
         }
@@ -52,7 +52,7 @@ public protocol SafeOperation {
     mutating func safeGet<T>(_ op: (inout RawCollectionType) throws -> T) rethrows -> T
 }
 
-public struct SafeContainer<RawCollectionType>: SafeOperation {
+public struct SafeContainer<RawCollectionType>: SafeOperation, @unchecked Sendable {
     public typealias RawCollectionType = RawCollectionType
     private let lock: RWLock = PThreadRWLock()
     private var container: RawCollectionType
