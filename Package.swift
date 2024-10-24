@@ -14,7 +14,7 @@ let package = Package(
     .library(name: "ConcurrencyCollection", targets: ["ConcurrencyCollection"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-collections.git", from:"1.0.4"),
+    .package(url: "https://github.com/apple/swift-collections.git", from:"1.1.4"),
   ],
   targets: [
     .target(

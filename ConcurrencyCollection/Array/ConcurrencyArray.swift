@@ -17,7 +17,7 @@ public final class ConcurrentArray<Element>: SafeOperation, @unchecked Sendable 
         try data.safeWrite(op)
     }
 
-    public func safeGet<T>(_ op: (inout [Element]) throws -> T) rethrows -> T {
+    public func safeGet<T>(_ op: ([Element]) throws -> T) rethrows -> T {
         try data.safeGet(op)
     }
 

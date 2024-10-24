@@ -19,7 +19,7 @@ public final class ConcurrentDictionary<KEY: Hashable, VALUE>: SafeOperation, Ma
         try data.safeWrite(op)
     }
 
-    public func safeGet<T>(_ op: (inout [KEY: VALUE]) throws -> T) rethrows -> T {
+    public func safeGet<T>(_ op: ([KEY: VALUE]) throws -> T) rethrows -> T {
         try data.safeGet(op)
     }
 

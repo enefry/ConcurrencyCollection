@@ -23,7 +23,7 @@ extension ConcurrentOrderedDictionary: SafeOperation {
         try data.safeWrite(op)
     }
 
-    public func safeGet<T>(_ op: (inout OrderedCollections.OrderedDictionary<KEY, VALUE>) throws -> T) rethrows -> T {
+    public func safeGet<T>(_ op: ( OrderedCollections.OrderedDictionary<KEY, VALUE>) throws -> T) rethrows -> T {
         try data.safeGet(op)
     }
 }
