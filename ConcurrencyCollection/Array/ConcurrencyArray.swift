@@ -55,6 +55,16 @@ public final class ConcurrentArray<Element>: SafeOperation, @unchecked Sendable 
         data.safeWrite { $0.append(contentsOf: sequence) }
     }
 
+    /// insert new element to array
+    public func insert(_ newElement: Element, at i: Int) {
+        data.safeWrite { $0.insert(newElement, at: i) }
+    }
+
+    /// insert new elements from Sequence
+    public func insert<C>(contentsOf newElements: C, at i: Int) where C: Collection, Element == C.Element {
+        data.safeWrite { $0.insert(contentsOf: newElements, at: i) }
+    }
+
     /// remove element at index
     public func remove(at index: Int) -> Element? {
         return data.safeWrite { $0.remove(at: index) }
