@@ -11,32 +11,32 @@ import Foundation
 public final class ConcurrentDeque<Element>: @unchecked Sendable {
     // MARK: - lifecycle
 
-    public init(_ queue: DequeModule.Deque<Element> = DequeModule.Deque()) {
+    public init(_ queue: Deque<Element> = Deque()) {
         data = SafeContainer(queue)
     }
 
     // MARK: data storage
 
-    fileprivate var data: SafeContainer<DequeModule.Deque<Element>>
+    fileprivate var data: SafeContainer<Deque<Element>>
 }
 
 extension ConcurrentDeque: SafeOperation {
     // MARK: - SafeOperation
 
-    public func safeWrite<T>(_ op: (inout DequeModule.Deque<Element>) throws -> T) rethrows -> T {
+    public func safeWrite<T>(_ op: (inout Deque<Element>) throws -> T) rethrows -> T {
         try data.safeWrite(op)
     }
 
-    public func safeGet<T>(_ op: (DequeModule.Deque<Element>) throws -> T) rethrows -> T {
+    public func safeGet<T>(_ op: (Deque<Element>) throws -> T) rethrows -> T {
         try data.safeGet(op)
     }
 
-    public typealias RawCollectionType = DequeModule.Deque<Element>
+    public typealias RawCollectionType = Deque<Element>
 }
 
 extension ConcurrentDeque: Sequence {
     // Make a copy and return it's iterator
-    public func makeIterator() -> DequeModule.Deque<Element>.Iterator {
+    public func makeIterator() -> Deque<Element>.Iterator {
         return safeGet { $0 }.makeIterator()
     }
 
