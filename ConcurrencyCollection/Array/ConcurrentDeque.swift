@@ -6,6 +6,7 @@
 //
 
 import Collections
+import DequeModule
 import Foundation
 
 public final class ConcurrentDeque<Element>: @unchecked Sendable {

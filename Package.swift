@@ -14,13 +14,15 @@ let package = Package(
     .library(name: "ConcurrencyCollection", targets: ["ConcurrencyCollection"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-collections.git", from:"1.1.4"),
+    .package(url: "https://github.com/apple/swift-collections.git", from:"1.6.0"),
   ],
   targets: [
     .target(
             name: "ConcurrencyCollection",
             dependencies: [
                 .product(name: "Collections",package: "swift-collections"),
+                .product(name: "DequeModule", package: "swift-collections"),
+                .product(name: "OrderedCollections", package: "swift-collections"),
             ],
             path: "ConcurrencyCollection"
         ),
